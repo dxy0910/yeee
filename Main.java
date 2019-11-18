@@ -1,13 +1,15 @@
-import tv.*;
-import factory.*;
-import XMLUtil.*;
+import user.*;
+import puduction.*;
+import utility.*;
+public class Main {
 
-public class Main{
-	public static void main(String args[]){
-		TV tv;
-		TVFactory factory;
-		factory = (TVFactory)XMLUtil.getBean();
-		tv = factory.produceTV();
-		tv.play();
+	public static void main(String[] args) {
+		User us;
+		Produce pr;
+		pr=(Produce)XMLUtility.getBean();
+		us=pr.produceUser();
+		us.generateCommucationRecord();
+		us.printDetails();
 	}
+
 }

@@ -1,8 +1,9 @@
-package 第十一周;
+package user;
+
 import java.util.Date;
 import java.util.Random;
-
-public class TelcomUser {
+import production.*;
+public class TelcomUser implements User{
 	private String phoneNumber;
 	private String callTo;
 	private StringBuffer commucationRecords;
@@ -10,7 +11,7 @@ public class TelcomUser {
 		this.phoneNumber=phoneNumber;
 		this.commucationRecords=new StringBuffer();
 	}
-	void generateCommucationRecord(){
+	public void generateCommucationRecord(){
 		int recordNum=new Random().nextInt(10);
 		for(int i=0;i<=recordNum;i++){
 			long timeStart=System.currentTimeMillis()-new Random().nextInt(36000000);
@@ -19,16 +20,16 @@ public class TelcomUser {
 			this.commucationRecords.append(this.phoneNumber+","+timeStart+","+timeEnd+","+this.callTo+";");
 		}
 	}
-	private String getCallToPhoneNumber(){
+	public String getCallToPhoneNumber(){
 			return "1593906"+String.valueOf(new Random().nextInt(10))+String.valueOf(new Random().nextInt(10))+String.valueOf(new Random().nextInt(10))+String.valueOf(new Random().nextInt(10));
 	}
-	private String accountFee(long timeStart,long timeEnd){
+	public String accountFee(long timeStart,long timeEnd){
 		double feePerMinute=0.2;
 		int minutes=Math.round((timeEnd-timeStart)/60000);
 		double feeTotal=feePerMinute*minutes;
 		return String.format("%.4f",feeTotal);
 	}
-	void printDetails(){
+	public void printDetails(){
 		String allRecords=this.commucationRecords.toString();
 		String []recordArray=allRecords.split(";");
 		for(int i=0;i<recordArray.length;i++){
