@@ -1,4 +1,5 @@
-package yi;
+package er;
+
 class Customer {
 	private String _name;
 	private Vector _rentals = new Vector();
@@ -21,7 +22,6 @@ class Customer {
 		String result = "Rentl Record for " + getName() + "\n";
 		while (rentals.hasMoreElements()) {
 			double thisAmount = 0;
-			Rental each = (Rental) rentals.nextElement();
 	
 			thisAmount = amountFor(each);
 			
@@ -44,8 +44,8 @@ class Customer {
 		return result;
 	}
 }
-private int amountFor(Rental each) {
-	int thisAmount = 0;
+private /*int*/double amountFor(Rental each) {
+	/*int*/double thisAmount = 0;
 	switch (each.getMovie().getPriceCode() ) {
 		case Movie.REGULAR:
 			thisAmount +=2;

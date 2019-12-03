@@ -1,15 +1,9 @@
-import user.*;
-import puduction.*;
-import utility.*;
+package yi;
+
 public class Main {
-
 	public static void main(String[] args) {
-		User us;
-		Produce pr;
-		pr=(Produce)XMLUtility.getBean();
-		us=pr.produceUser();
-		us.generateCommucationRecord();
-		us.printDetails();
-	}
-
+	      Customer c1=new Customer("zhangsan");
+	      c1. addRental(new Rental(new Movie("lisi",2),6));
+	      System. out.print(c1. statement());
+	  }
 }
