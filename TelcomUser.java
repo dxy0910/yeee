@@ -1,44 +1,71 @@
-package user;
+import java.util.*;
 
-import java.util.Date;
-import java.util.Random;
-import production.*;
-public class TelcomUser implements User{
-	private String phoneNumber;
+public class TelcomUser {
+
+	private String TelNum;
 	private String callTo;
-	private StringBuffer commucationRecords;
-	public TelcomUser(String phoneNumber){
-		this.phoneNumber=phoneNumber;
-		this.commucationRecords=new StringBuffer();
+	private HashMap singleRecoed;
+	private LinkedHashMap singleRecord;
+	private TreeMap TreeMapCallToRecords;
+	private TreeMap TreeSingleRecord;
+	private ArrayList communicationRecords;
+
+	public MapTelcomUser(String TelNum) {
+		this.TelNum = TelNum;
+		this.communicationRecords = new ArrayList();
+		this.TreeMapCallToRecords = new TreeMap();
 	}
-	public void generateCommucationRecord(){
-		int recordNum=new Random().nextInt(10);
-		for(int i=0;i<=recordNum;i++){
-			long timeStart=System.currentTimeMillis()-new Random().nextInt(36000000);
-			long timeEnd=timeStart+60000+new Random().nextInt(600000);
-			callTo=this.getCallToPhoneNumber();
-			this.commucationRecords.append(this.phoneNumber+","+timeStart+","+timeEnd+","+this.callTo+";");
+
+	void generateCommunicateRecord() {
+		int recordNum = new Random().nextInt(10);
+		for (int i = 0; i <= recordNum; i++) {
+			this.TreeSingleRecord = new TreeMap();
+			long timeStart = System.currentTimeMillis() - new Random().nextInt(36000000);
+			long timeEnd = timeStart + 60000 + new Random().nextInt(600000);
+			this.callTo = getCallToTelNum();
+			this.TreeSingleRecord.put("主叫", this.TelNum);
+			this.TreeSingleRecord.put("开始时间", new Date(timeStart));
+			this.TreeSingleRecord.put("结束时间", new Date(timeEnd));
+			this.TreeSingleRecord.put("被叫号码", this.callTo);
+			this.TreeSingleRecord.put("计费", this.accountFee(timeStart, timeEnd));
+			this.communicationRecords.add(TreeSingleRecord);
+			this.TreeMapCallToRecords.put(this.callTo, this.accountFee(timeStart, timeEnd));
 		}
 	}
-	public String getCallToPhoneNumber(){
-			return "1593906"+String.valueOf(new Random().nextInt(10))+String.valueOf(new Random().nextInt(10))+String.valueOf(new Random().nextInt(10))+String.valueOf(new Random().nextInt(10));
+	private String getCallToTelNum() {
+		return "1380372000" + String
+				.valueOf(new Random().nextInt(5))+ String.valueOf(new Random().nextInt(10)) + String.valueOf(new Random().nextInt(10)) + String.valueOf(new Random().nextInt(10));
 	}
-	public String accountFee(long timeStart,long timeEnd){
-		double feePerMinute=0.2;
-		int minutes=Math.round((timeEnd-timeStart)/60000);
-		double feeTotal=feePerMinute*minutes;
-		return String.format("%.4f",feeTotal);
+	private String accountFee(long timeStart, long timeEnd) {
+		double feePerMinute = 0.2;
+		int minutes = Math.round((timeEnd - timeStart) / 60000);
+		double feeTotal = feePerMinute * minutes;
+		return String.format("%.3f", feeTotal);
 	}
-	public void printDetails(){
-		String allRecords=this.commucationRecords.toString();
-		String []recordArray=allRecords.split(";");
-		for(int i=0;i<recordArray.length;i++){
-			String []recordField=recordArray[i].split(",");
-			System.out.println("主叫:"+recordField[0]);
-			System.out.println("被叫:"+recordField[3]);
-			System.out.println("通话开始时间:"+new Date(Long.parseLong(recordField[1])));
-			System.out.println("通话结束时间:"+new Date(Long.parseLong(recordField[2])));
-			System.out.println("计费:"+accountFee(Long.parseLong(recordField[1]),Long.parseLong(recordField[2]))+"元");
+
+
+	void printDetails() {
+
+		Iterator it = this.communicationRecords.iterator();
+		while (it.hasNext()) {
+			System.out.println("----------通话记录分割线----------");
+			this.TreeSingleRecord = ((TreeMap) it.next());
+			Set entrySet = this.TreeSingleRecord.entrySet();
+			Iterator itEntry = entrySet.iterator();
+			while (itEntry.hasNext()) {
+				Map.Entry entry = (Map.Entry) itEntry.next();
+				System.out.println(entry.getKey() + ":" + entry.getValue());
+			}
+
+		}
+
+	}
+
+	void printCallToDetails() {
+		Iterator it = this.TreeMapCallToRecords.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry entry = (Map.Entry) it.next();
+			System.out.println(entry.getKey() + ":" + entry.getValue());
 		}
 	}
 }
