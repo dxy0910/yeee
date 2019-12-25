@@ -1,95 +1,125 @@
-package Bank;
-
+package bank;
 import java.util.Scanner;
+import user.*;
+import utility.*;
 
-public class Bank {
-	int account;
-	private static User user;
-	
-	public static void main(String[] args){
-		Bank b = new Bank();
-		b.login();
-		b.operate();
-	}
-	
-	/*账户金额存入、取出和查询操作*/
-	public void operate(){
-		Bank b = new Bank();
-		while (true){
-			System.out.println("请输入您要进行的操作类型，按回车键结束");
-			System.out.println("\t存款：1"+"\n"+"\t取款：2"+"\n"+"\t余额：3"+"\n"+"\t退出：0");
-			Scanner in = new Scanner(System.in);
-			String s = in.nextLine(); //输入的操作类型
-			if("1".equals(s)||"2".equals(s)){
-				int num = 0;
-				try{
-					System.out.print("输入存取的金额:");
-					num = Integer.parseInt(in.nextLine());
-				}catch(Exception e){
-					System.err.println("金额输入错误！");
+ public class Bank
+{
+		int account;
+		private static User user;
+
+ 		public static void main(String[] args)
+		{
+			Bank Bank = new Bank();
+			Bank.login();
+			Bank.operate();
+		}
+
+ 		// 金额存入、取出、查询
+		public void operate()
+		{
+			Bank Bank = new Bank();
+			int n;
+			Scanner sc = new Scanner(System.in);
+			while (true)
+			{
+				System.out.println("请选择你要进行的操作：");
+				System.out.println("1: 存入\t 2:取出\t 3:查询\t0:退出");
+				n = sc.nextInt();
+				if(n==1||n==2)
+				{
+
+ 					int num=0;
+					try
+					{
+						System.out.println("请输入您的存取款数：");
+						num=sc.nextInt();
+					}
+					catch(Exception e)
+					{
+						System.out.println("输入金额错误");
+						continue;
+					}
+
+
+ 					switch (n)
+					{
+						case 1:
+							Bank.income(num);
+							break;
+						case 2:
+							Bank.takeout(num);
+							break;
+						default:
+							break;
+					}
+				}
+				else if( n==3)
+				{
+					show();
+				}
+				else if( n== 0)
+				{
+					System.exit(0);
+				}
+				else
+				{
+					System.out.println("请输入0~3之间的数字选择操作");
+				}
+			}
+		}
+		public void login()
+		{
+			Utility dt = Utility.getInstance();
+			Scanner sc = new Scanner(System.in);
+			while (true)
+			{
+				System.out.println("请输入您的卡号：");
+				String cardID = sc.nextLine();
+				System.out.println("请输入密码：");
+				String cardpassword = sc.nextLine();
+				user = dt.getUser(cardID);
+//				System.out.println(user.getCardID());
+				if (dt.getUsers().containsKey(cardID) && user.getCardPassword().equals(cardpassword))
+				{
+					System.out.println("登陆成功");// 登陆成功
+					break;
+				}
+				else
+				{
+					System.out.println("密码或账号错误，请重新输入！");// 失败
 					continue;
 				}
-				switch(s){
-				case "1"://存款操作
-					b.income(num);
-					break;
-				case "2"://取款操作
-					b.takeout(num);
-					break;
-				}
-			}else if("3".equals(s)){
-				b.show();
-			}else if("0".equals(s)){
-				System.out.println("退出系统");
-				return;	
-			}else{
-				System.out.println("请输入0-3之间的数字选择相关操作！");
-			}
-		}
-	}
-	/*用户登录网上银行*/
-	public void login(){
-		DBUtil dbutil = DBUtil.getInstance();
-		System.out.println("欢迎使用网上银行系统！");
-		while (true){
-			Scanner in = new Scanner(System.in);  //键盘录入
-			System.out.println("请输入银行卡号：");
-			String cardId = in.nextLine();
-			System.out.println("请输入银行卡密码：");
-			String cardPwd = in.nextLine();
-			user = dbutil.getUser(cardId);
-			//登录
-			if(dbutil.getUsers().containsKey(cardId)
-					&& user.getCardPwd().equals(cardPwd)){
-				System.out.println("登录成功！\n欢迎"+user.getUserName()+"女士/先生");
-				break;
-			}else{
-				System.err.println("银行卡号或密码错误!");
-				continue;
-			}
-			
-		}
-	}
-	/*存款*/
-	public void income(int num){
-		account = user.getAccount() + num;
-		user.setAccount(account);
-		System.out.println("存入金额"+ num + "元成功！");
-	}
-	/*取款*/
-	public void takeout (int num){
-		if(user.getAccount() >= num){
-			account = user.getAccount() - num;
-			user.setAccount(account);
-			System.out.println("取出金额"+ num + "元成功！");
-		}else{
-			System.err.println("余额不足，取款失败！");
-		}
-	}
-	/*查询余额*/
-	public void show(){
-		account = user.getAccount();
-		System.out.println("账户总余额为"+ account + "元！");
-	}
 
+ 			}
+		}
+
+ 		public void income(int num)
+		{
+			account = user.getAccount() + num;
+			user.setAccount(account);
+			System.out.println("已成功存入，请继续您的操作。");// 存入成功
+		}
+
+ 		public void takeout(int num)
+		{
+			if (user.getAccount() >= num)
+			{
+				account = user.getAccount() - num;
+
+ 				user.setAccount(account);
+				System.out.println("已取出");// 成功
+			}
+			else
+			{
+				System.out.println("您的余额不足：请重新选择您的操作");// 失败
+			}
+		}
+
+ 		public void show()
+		{
+			account = user.getAccount();
+			System.out.println("您的余额为" + account + "元");// 输出
+		}
 }
+
